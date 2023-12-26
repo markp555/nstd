@@ -1,4 +1,5 @@
 #pragma once
+// Mark Privodnov (c)
 namespace MathNumberTheory
 {
 	const char* name = "Number Theory";
