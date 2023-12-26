@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Author>Mark Software</Author>
+<Title>BestElement</Title>
+<Description>insert BestElement</Description>
+<Shortcut> bestelemlib</Shortcut>
+</Header>
+		<Snippet>
+			<Code Language="CPP">
+				<![CDATA[
+#pragma region BestElement
+#ifdef _DEBUG // Local library
+#include "C:\Users\User\Documents\Visual Studio 2019\BestElement.h"
+#else
+// BestElement.h
+// Mark_Pr (c) 2022
+
+#pragma once
+#include <vector>
+#include <assert.h>
+#include <bitset>
+
+namespace std
+{
+	template <typename T, size_t cnt, class comp = less<T>>
+	struct BestElement
+	{
+		bitset<cnt> used;
+		T best[cnt];
+		comp c;
+
+		BestElement()
+		{
+			memset(best, 0, sizeof(best));
+		}
+
+		BestElement(const comp& oth): c(oth)
+		{
+			memset(best, 0, sizeof(best));
+		}
+
+		const T& get(size_t ind) const
+		{
+			assert(ind < cnt);
+			return best[ind];
+		}
+
+		const T& operator[](size_t ind) const
+		{
+			return get(ind);
+		}
+
+		size_t push(const T& elem)
+		{
+			for (int i = 0; i < cnt; i++)
+			{
+				if (!used[i] || c(best[i], elem))
+				{
+					for (int j = cnt - 2; j >= i; j--)
+					{
+						if (used[j])
+						{
+							best[j + 1] = best[j];
+							used[j + 1] = true;
+						}
+					}
+					best[i] = elem;
+					used[i] = true;
+					return i;
+				}
+			}
+			return cnt;
+		}
+	};
+}
+#endif
+#pragma endregion
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

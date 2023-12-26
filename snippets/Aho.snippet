@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Author>Mark Software</Author>
+<Title>Aho</Title>
+<Description>insert Aho</Description>
+<Shortcut> aholib</Shortcut>
+</Header>
+		<Snippet>
+			<Code Language="CPP">
+				<![CDATA[
+#pragma region Aho
+#ifdef _DEBUG // Local library
+#include "C:\Users\User\Documents\Visual Studio 2019\AhoKorasik.h"
+#else
+// AhoKorasik.h
+// Mark_Pr (c) 2022
+
+#pragma once
+#include <cstring>
+#include <functional>
+
+namespace std
+{
+	// trie
+	struct Aho
+	{
+		struct Node
+		{
+			Node* to[26];
+			Node* go[26];
+			Node* p;
+			char pc;
+			Node* l;
+			Node* u;
+			bool is;
+			int str;
+		};
+
+		Node* root;
+
+		void DFS(Node* cur, function<void(Node*)> operation)
+		{
+			for (size_t i = 0; i < 26; i++)
+			{
+				if (cur->to[i])
+					DFS(cur->to[i], operation);
+			}
+			operation(cur);
+		}
+
+		Aho()
+		{
+			root = new Node();
+			memset(root, 0, sizeof(Node));
+		}
+
+		~Aho()
+		{
+			DFS(root, [](Node* n) {delete n; });
+		}
+
+		void Push(const string& s, char ch, int num)
+		{
+			int len = s.size();
+			Node* cur = root;
+			for (size_t i = 0; i < len; i++)
+			{
+				char c = s[i] - ch;
+				if (cur->to[c] == NULL)
+				{
+					cur->to[c] = new Node;
+					memset(cur->to[c], 0, sizeof(Node));
+					cur->to[c]->pc = c;
+					cur->to[c]->p = cur;
+				}
+				cur = cur->to[c];
+			}
+			cur->str = num;
+			cur->is = 1;
+		}
+
+		Node* GetSuffLink(Node* v);
+		Node* GetLink(Node* v, char c);
+
+		Node* GetUp(Node* v)
+		{
+			if (v->u == NULL)
+			{
+				if (GetSuffLink(v)->is)
+					v->u = GetSuffLink(v);
+				else if (GetSuffLink(v) == root)
+					v->u = root;
+				else
+					v->u = GetUp(GetSuffLink(v));
+			}
+			return v->u;
+		}
+
+		void Search(const string& s, char ch, vector <vector <int>>& l)
+		{
+			int len = s.size();
+			Node* cur = root;
+			for (size_t i = 0; i < len; i++)
+			{
+				char c = s[i] - ch;
+				cur = GetLink(cur, c);
+				for (Node* v = cur; v != root; v = GetUp(v))
+				{
+					if (v->is)
+						l[v->str].push_back(i);
+				}
+			}
+		}
+	};
+
+	Aho::Node* Aho::GetSuffLink(Aho::Node* v)
+	{
+		if (v->l)
+			return v->l;
+		if (v == root || v->p == root)
+			v->l = root;
+		else
+			v->l = GetLink(GetSuffLink(v->p), v->pc);
+		return v->l;
+	}
+	Aho::Node* Aho::GetLink(Aho::Node* v, char c)
+	{
+		if (v->go[c])
+			return v->go[c];
+		if (v->to[c])
+			v->go[c] = v->to[c];
+		else if (v == root)
+			v->go[c] = root;
+		else
+			v->go[c] = GetLink(GetSuffLink(v), c);
+		return v->go[c];
+	}
+}
+#endif
+#pragma endregion
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

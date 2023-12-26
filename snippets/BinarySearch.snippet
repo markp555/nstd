@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Author>Mark Software</Author>
+<Title>BinarySearch</Title>
+<Description>insert BinarySearch</Description>
+<Shortcut> binsearchlib</Shortcut>
+</Header>
+		<Snippet>
+			<Code Language="CPP">
+				<![CDATA[
+#pragma region BinarySearch
+#ifdef _DEBUG // Local library
+#include "C:\Users\User\Documents\Visual Studio 2019\BinaryNamespace.hpp"
+#else
+// BinaryNamespace.hpp
+// Mark_Pr (c) 2022
+
+#pragma once
+#include <vector>
+#include <functional>
+
+//namespace Binary {
+namespace std
+{
+    template <typename _Type, typename _Off>
+    struct BinaryOption
+    {
+        _Type _Start, _End, _Mid;
+        _Off _Querity;
+        function<bool(const _Type& t)> _Func;
+    };
+    template<typename _Type, typename _Off>
+    void BinarySearch(BinaryOption<_Type,_Off>* _Opt)
+    {
+        while (_Opt->_End - _Opt->_Start > _Opt->_Querity)
+        {
+            _Opt->_Mid = _Opt->_Start + ((_Opt->_End - _Opt->_Start) / 2);
+            if (_Opt->_Func(_Opt->_Mid))
+                _Opt->_End = _Opt->_Mid;
+            else
+                _Opt->_Start = _Opt->_Mid;
+        }
+    }
+    template <typename _Type,typename _Off>
+    void BinarySearch(BinaryOption<_Type, _Off>* _Opt, size_t _Iter)
+    {
+        for (size_t i = 0; i<_Iter && _Opt->_End - _Opt->_Start > _Opt->_Querity; ++i)
+        {
+            _Opt->_Mid = _Opt->_Start + ((_Opt->_End - _Opt->_Start) / 2);
+            if (_Opt->_Func(_Opt->_Mid))
+                _Opt->_End = _Opt->_Mid;
+            else
+                _Opt->_Start = _Opt->_Mid;
+        }
+    }
+    /*template <typename _Type>
+    _Type BinarySearch(_Type start, _Type end, BinaryFunction <_Type> binFunc) {
+        for (size_t i = 0; i < 1e6; i++)
+        {
+            _Type m = (start + end) / 2;
+            if (binFunc(m))
+                end = m;
+            else
+                start = m;
+        }
+        return end;
+    }
+
+    template <typename _Type>
+    _Type BinarySearch(_Type start, _Type end, _Type querity, BinaryFunction <_Type> binFunc) {
+        while (end - start > querity)
+        {
+            _Type m = start + (end - start) / 2;
+            if (binFunc(m))
+                end = m;
+            else
+                start = m;
+        }
+        return end;
+    }*/
+}
+
+#endif
+#pragma endregion
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Author>Mark Software</Author>
+<Title>Heap</Title>
+<Description>insert Heap</Description>
+<Shortcut> heaplib</Shortcut>
+</Header>
+		<Snippet>
+			<Code Language="CPP">
+				<![CDATA[
+#pragma region Heap
+#ifdef _DEBUG // Local library
+#include "C:\Users\User\Documents\Visual Studio 2019\heap.h"
+#else
+// heap.h
+// Mark_Pr (c) 2022
+
+#pragma once
+#include <vector>
+#include <algorithm>
+#include <stdlib.h>
+
+/// <summary>
+/// Heap class
+/// Created by Mark_Pr (c) 2021
+/// </summary>
+/// <typeparam name="_Type">Value type</typeparam>
+template <typename _Type>
+class Heap {
+    /// Variables
+private:
+    using type = _Type;
+    using comp = bool (*)(type&, type&);
+
+    struct pair {
+        size_t i, j;
+
+        pair(size_t x, size_t y) {
+            i = x;
+            j = y;
+        }
+
+        size_t operator[](size_t i) {
+            if (i == 0)
+                return this->i;
+            else
+                return j;
+        }
+    };
+
+    size_t size;
+    std::vector <type> heap;
+    comp cmp;
+
+    /// Functions
+
+    /// <summary>
+    /// Return child of i element.
+    /// </summary>
+    /// <param name="i">index of element</param>
+    /// <returns>Children for i element</returns>
+    pair get(size_t i) {
+        return { 2 * i, 2 * i + 1 };
+    }
+
+    /// <summary>
+    /// Sorting up
+    /// </summary>
+    /// <param name="i">Index of the element</param>
+    void up(size_t i) {
+        if (i != 1 && cmp(heap[i / 2], heap[i])) {
+            std::swap(heap[i / 2], heap[i]);
+            up(i / 2);
+        }
+    }
+
+    /// <summary>
+    /// Sorting down
+    /// </summary>
+    /// <param name="i">Index of the element</param>
+    void down(size_t i) {
+        pair child = get(i);
+        if (child[0] < size) {
+            if (child[1] < size) {
+                if (cmp(heap[i], heap[child[0]]) || cmp(heap[i], heap[child[1]])) {
+                    if (cmp(heap[child[1]], heap[child[0]])) {
+                        std::swap(heap[i], heap[child[0]]);
+                        down(child[0]);
+                        return;
+                    }
+                    else {
+                        std::swap(heap[i], heap[child[1]]);
+                        down(child[1]);
+                        return;
+                    }
+                }
+            }
+            else {
+                if (cmp(heap[i], heap[child[0]])) {
+                    std::swap(heap[i], heap[child[0]]);
+                    down(child[0]);
+                    return;
+                }
+            }
+        }
+    }
+
+public:
+    /// <summary>
+    /// Heap default constructor
+    /// </summary>
+    /// <param name="less"> operator less for _Type</param>
+    Heap(comp less = [](type& t, type& t2) { return t < t2; }) {
+        //std::less <type> less;
+        this->cmp = less;
+        size = 1;
+        heap.push_back(type());
+    }
+
+    /// <summary>
+    /// Return size of the heap
+    /// </summary>
+    /// <returns>size of the heap</returns>
+    size_t hsize() {
+        return this->size - 1;
+    }
+
+    /// <summary>
+    /// Insert an element
+    /// </summary>
+    /// <param name="n">element to insert</param>
+    void insert(type n) {
+        size++;
+        heap.push_back(n);
+        up(size - 1);
+    }
+
+    /// <summary>
+    /// Extract core and remove it
+    /// </summary>
+    /// <returns>max element of the heap</returns>
+    type extract() {
+#ifdef _DEBUG
+        if (size == 1)
+        {
+            throw std::exception("Heap out of range!!!");
+        }
+#endif
+        type value = heap[1];
+        heap[1] = heap.back();
+        heap.pop_back();
+        size--;
+        down(1);
+        return value;
+    }
+
+    /// <summary>
+    /// Remove element with index i
+    /// </summary>
+    /// <param name="i">index of the element</param>
+    /// <returns>value of the element</returns>
+    type remove(size_t i) {
+        size--;
+        type value = heap[i];
+        heap[i] = heap.back();
+        heap.pop_back();
+        down(i);
+        return value;
+    }
+
+    bool empty() {
+        return hsize() == 0;
+    }
+
+    /// <summary>
+    /// Return the max element
+    /// </summary>
+    /// <returns>max element</returns>
+    type top() {
+#ifdef _DEBUG
+        if (size == 1)
+        {
+            throw std::exception("Heap out of range!!!");
+        }
+#endif
+        return heap[1];
+    }
+};
+#endif
+#pragma endregion
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

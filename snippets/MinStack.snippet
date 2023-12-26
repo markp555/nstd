@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Author>Mark Software</Author>
+<Title>MinStack</Title>
+<Description>insert MinStack</Description>
+<Shortcut> minstacklib</Shortcut>
+</Header>
+		<Snippet>
+			<Code Language="CPP">
+				<![CDATA[
+#pragma region MinStack
+#ifdef _DEBUG // Local library
+#include "C:\Users\User\Documents\Visual Studio 2019\MinStack.h"
+#else
+// MinStack.h
+// Mark_Pr (c) 2022
+
+#pragma once
+#ifndef _MINSTACK_
+#define _MINSTACK_
+#include <stdlib.h>
+#include <vector>
+#ifdef _DEBUG
+#define ERROR(exp, wht) _ASSERT_EXPR(exp, wht)
+#else
+#define ERROR(exp, wht) 
+#endif
+namespace std {
+	template <typename Type>
+	using Func2 = Type(*)(const Type&, const Type&);
+
+	template <typename Type>
+	class MinStack
+	{
+	private:
+		vector <Type>	value;
+		vector <Type>	minv;
+		Func2 <Type>		minf;
+
+	public:
+
+		MinStack(Func2 <Type>& f, size_t size = 0)
+		{
+			value.reserve(size);
+			minv.reserve(size);
+			minf = f;
+		}
+
+		void add(const Type& t)
+		{
+			value.push_back(t);
+			if (!minv.empty())
+			{
+				minv.push_back(minf(minv.back(), t));
+			}
+			else
+			{
+				minv.push_back(t);
+			}
+		}
+
+		const Type& get()
+		{
+			ERROR(!value.empty(), L"MinStack out of range!");
+			return value.back();
+		}
+
+		void del() {
+			ERROR(!value.empty(), L"MinStack out of range!");
+			value.pop_back();
+			minv.pop_back();
+		}
+
+		const Type& func()
+		{
+			ERROR(!minv.empty(), L"MinStack out of range!");
+			return minv.back();
+		}
+
+		size_t size()
+		{
+			return value.size();
+		}
+		
+		bool empty()
+		{
+			return minv.empty();
+		}
+	};
+
+	template <typename Type>
+	class MinQueue
+	{
+		MinStack <Type> back, front;
+		Func2 <Type> f;
+
+		void rebuild()
+		{
+			while (!back.empty())
+			{
+				front.add(back.get());
+				back.del();
+			}
+		}
+
+	public:
+		MinQueue(Func2 <Type> f):back(f),front(f), f(f)
+		{
+		}
+
+		size_t size()
+		{
+			return back.size() + front.size();
+		}
+
+		void add(const Type& t)
+		{
+			back.add(t);
+		}
+
+		void del()
+		{
+			if (front.empty())
+				rebuild();
+			ERROR(!front.empty(), L"MinQueue out of range");
+			front.del();
+		}
+
+		const Type& get()
+		{
+			if (front.empty())
+				rebuild();
+			ERROR(!front.empty(), L"MinQueue out of range");
+			return front.get();
+		}
+		Type func()
+		{
+			if (front.empty())
+				return back.func();
+			if (back.empty())
+				return front.func();
+			//ERROR(front.empty() && back.empty(), L"MinQueue out of range");
+			return f(back.func(), front.func());
+		}
+	};
+}
+#endif
+#endif
+#pragma endregion
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>
