@@ -1,3 +1,5 @@
+// Mark Privodnov (c)
+
 #pragma once
 #include <stdlib.h>
 
