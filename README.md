@@ -9,7 +9,17 @@
 
 ```
 SegmentTree<int> st([](int a,int b){return a+b;},0); // Дерево отрезков на сумму
-st.init(3); // Размер
+st.init(3); // Size
+st.set(0, 5);
+st.set(1, 4);
+st.set(2, 3);
+cout << st.segment(0, 2) << '\n'; // 5 + 4 = 9 // segment(l, r) = st[l] + st[l+1] + ... + st[r-1]
+cout << st.segment(0, 3) << '\n'; // 5 + 4 + 3 = 12
+cout << st.segment(0, 0) << '\n'; // 0 // Always nullelem
+cout << st[1] << '\n'; // 4
+st.set(1, st[1] + 1);
+cout << st.segment(0, 3) << '\n'; // 5 + 5 + 3 = 13
+
 ```
 > [!NOTE]
 > Чтобы использовать ДО с обновлением на отрезке необходимо добавить ```#define EXT``` перед подключением библиотеки
