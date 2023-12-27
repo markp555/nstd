@@ -9,6 +9,8 @@
 
 ```
 SegmentTree<int> st([](int a,int b){return a+b;},0); // Дерево отрезков на сумму
+// SegmentTree<int> st([](int a,int b){return min(a,b);},1e9); // Дерево отрезков на минимум
+// SegmentTree<T> st(f, nullelem); // f(nullelem, x) = x
 st.init(3); // Size
 st.set(0, 5);
 st.set(1, 4);
