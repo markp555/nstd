@@ -43,7 +43,7 @@ namespace std
 			{
 				size_t u = q.front();
 				q.pop();
-				for (auto& t : g.at(v))
+				for (auto& t : g.at(u))
 				{
 					if (dist[t.first] != INF)
 						continue;
